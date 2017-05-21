@@ -2,11 +2,11 @@ from requests import post
 from requests import get
 from requests import HTTPError
 try:
-	from thread import start_new_thread
+	from _thread import start_new_thread
 except ImportError:
 	from _thread import start_new_thread
 try:
-	from urllib import quote
+	from urllib.parse import quote
 except ImportError:
 	from urllib.parse import quote
 

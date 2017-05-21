@@ -3,13 +3,13 @@
 try:
 	from . import Offliberate
 except (SystemError, ValueError):
-	import Offliberate
+	from . import Offliberate
 try:
-	from urlparse import urlparse
+	from urllib.parse import urlparse
 except ImportError:
 	from urllib.parse import urlparse
 try:
-	from thread import start_new_thread
+	from _thread import start_new_thread
 except ImportError:
 	from _thread import start_new_thread
 
@@ -58,8 +58,8 @@ def prettify_rate(rate):
 		return "%dKB/s" % rate
 
 
-def progress_bar(size, part_lenght, iterable, fill_char=u"█", 
-	delimiter=u"|", ratio=3, text=""):
+def progress_bar(size, part_lenght, iterable, fill_char="█", 
+	delimiter="|", ratio=3, text=""):
 	"""
 	size: Full size of iterable
 	part_lenght: Parts fetched from generator per yield
@@ -90,10 +90,10 @@ def progress_bar(size, part_lenght, iterable, fill_char=u"█",
 		empty_space = terminal_width - (19 + filler_in_bar + whitespaces_in_bar)
 		if terminal_width != last_terminal_width: # Clear whole line if terminal size changed since last draw
 			last_terminal_width = terminal_width # Change last terminal width to current one for future comparison
-			stdout.write(u"\r%s" % (" " * last_terminal_width))
+			stdout.write("\r%s" % (" " * last_terminal_width))
 			stdout.flush()
 		if terminal_width > 19: # Maximum with of progress bar assuming 100MB/s
-				stdout.write(u"\r%s%s%s%s (%s%d%%) [%s%s] %s" % (
+				stdout.write("\r%s%s%s%s (%s%d%%) [%s%s] %s" % (
 				delimiter,
 				fill_char * (int(percise_progress * part_length)), # Filler char for progress
 				" " * whitespaces_in_bar, # Whitespaces for progress
@@ -102,15 +102,15 @@ def progress_bar(size, part_lenght, iterable, fill_char=u"█",
 				percent_progress, # Percent
 				" " * (7 - len(str(prettified_progress_rate))),
 				prettified_progress_rate, # Progress rate
-				text if len(text) < empty_space else text[:empty_space - 4] + u"..."))
+				text if len(text) < empty_space else text[:empty_space - 4] + "..."))
 		elif terminal_width > 14: # Progress bar is not shown if the terminal width is too small
-			stdout.write(u"\r(%s%d) [%s%s]" % (
+			stdout.write("\r(%s%d) [%s%s]" % (
 				" " * (3 - len(str(percent_progress))), # Center percent count in brackets
 				percent_progress,
 				" " * (7 - len(str(prettified_progress_rate))),
 				prettified_progress_rate))
 		else:
-			stdout.write(u"\r(%s%d)" % (
+			stdout.write("\r(%s%d)" % (
 				" " * (3 - len(str(percent_progress))), # Center percent count in brackets
 				percent_progress))
 		stdout.flush()
@@ -118,7 +118,7 @@ def progress_bar(size, part_lenght, iterable, fill_char=u"█",
 		if version_info.major == 3:
 			print()
 		else:
-			print
+			print()
 
 
 class ProgressIndicator:
@@ -229,8 +229,8 @@ def entry_point():
 				args.urls.append(url.rstrip("\n").replace("\\", ""))
 
 		if args.pretty and len(args.urls) != 0:
-			animation = [u"⠋", u"⠙", u"⠹", u"⠸", u"⠼", u"⠴", u"⠦", 
-			u"⠧", u"⠇", u"⠏"]
+			animation = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", 
+			"⠧", "⠇", "⠏"]
 			progress_indicator = ProgressIndicator(animation, 0.20)
 			progress_indicator.start()
 			
@@ -244,10 +244,10 @@ def entry_point():
 					progress_indicator.status = url
 				if args.audio and args.video:
 					if args.pretty:
-						progress_indicator.status = u"🎵  " + url
+						progress_indicator.status = "🎵  " + url
 					audio_result = Offliberate.request(url, audio=True)
 					if args.pretty:
-						progress_indicator.status = u"🎬  " + url
+						progress_indicator.status = "🎬  " + url
 					video_result = Offliberate.request(url, audio=False, video=True)
 					results.append(audio_result.combine(video_result))
 				else:
@@ -261,23 +261,23 @@ def entry_point():
 			progress_indicator.stop()
 
 		for url in invalid_urls:
-			print("%sInvalid url: %s" % (u"❌  " if args.pretty else "", url))
+			print(("%sInvalid url: %s" % ("❌  " if args.pretty else "", url)))
 
 		for result in results:
 			if len(results) > 1:
 				if result != None:
-					print(result.url) 
+					print((result.url)) 
 			if result == None:
-				print("%s: Something went wrong... :(" % (u"❌ " 
-					if args.pretty else "Offliberty error"))
+				print(("%s: Something went wrong... :(" % ("❌ " 
+					if args.pretty else "Offliberty error")))
 			else:		
 				if args.audio:
-					print("%s: %s" % (u"🎵 " if args.pretty else "Audio", result.audio))
+					print(("%s: %s" % ("🎵 " if args.pretty else "Audio", result.audio)))
 				if args.video and result.video:
-					print("%s: %s" % (u"🎬 " if args.pretty else "Video", result.video))
+					print(("%s: %s" % ("🎬 " if args.pretty else "Video", result.video)))
 				if args.video and not result.video:
-					print("%s: %s" % (u"❌  🎬 " if args.pretty else "Error fetching video", 
-						result.url))
+					print(("%s: %s" % ("❌  🎬 " if args.pretty else "Error fetching video", 
+						result.url)))
 
 		if not args.no_download:
 			if args.download_location == None:
@@ -301,7 +301,7 @@ def entry_point():
 			if version_info.major == 3:
 				print()
 			else:
-				print
+				print()
 
 	except KeyboardInterrupt:
 		pass
